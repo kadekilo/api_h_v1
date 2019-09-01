@@ -65,5 +65,17 @@ Third method, with this SQL:
 	INSERT INTO `user` (`id`, `name`, `username`, `password`, `roles`) VALUES
 		(1, 'admin', 'admin', '3b3b4904477b0d47a5627249ff5f1212', 'ADMIN');
     
+## API Documentation
+
+In order to use apiDocumentation, you can:
+
+- Start dev server and put browser in the correct URL, normaly "http://127.0.0.1:8000/api/doc"
+- Use this cached version of the documentation from: http://kadekilo.com/temporal_637992ddf6/api_doc.html
+
 ## More information
+
+Please, visit http://kadekilo.com/temporal_637992ddf6/ for a complete documentation of the Project. This web its protected by username and password that have been sent to your email adress, remited by Gabriel Simón.
+
+
+
 

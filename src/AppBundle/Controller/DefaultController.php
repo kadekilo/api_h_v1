@@ -126,10 +126,9 @@ class DefaultController extends Controller
                 // Create Session and redirect
                 $datos_usuario_ses = $response->body->datos_usuario;
                 $session           = new Session();
-                //$session->start();
                 $session->set('name', 'SES_HO_1');
                 $session->set('datos_usuario', $datos_usuario_ses);
-                //$datos_usuario_ses->roles
+                // Redirect Index page to consider the roles :)
                 return $this->redirect('/');
             }
         } else {
@@ -137,7 +136,7 @@ class DefaultController extends Controller
             $texxtoerrors = "";
             if (!empty($request->query->get("code"))) {
                 $code = $request->query->get("code");
-                if ($code == "BC") {
+                if ($code == 403) {
                     $texxtoerrors = "Bad credentials!";
                 } else if ($code == 302) {
                     $texxtoerrors = "Please, login first!";

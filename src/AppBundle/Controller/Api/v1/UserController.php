@@ -8,10 +8,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 class UserController extends Controller
 {
-
     public function is_loged_in($request)
     {
         $usuario = $request->headers->get('php-auth-user');
@@ -42,6 +42,24 @@ class UserController extends Controller
     /**
      * @Route("/api/v1/user")
      * @Method("POST")
+     * @ApiDoc(
+     *  description="Create a new User. You need ADMIN role to do this.",
+     *  parameters={
+     *      {"name"="s_name", "dataType"="string", "required"=true, "description"="Name of the USER"},
+     *      {"name"="s_username", "dataType"="string", "required"=true, "description"="UserName used by USER in login"},
+     *      {"name"="s_password", "dataType"="string", "required"=true, "description"="Password of the USER"},
+     *      {"name"="s_roles", "dataType"="simple_array", "required"=false, "description"="Roles [ADMIN,PAGE_1,PAGE_2]"},
+     *  },
+     *  headers={
+     *      {"name"="AUTH_USER", "description"="Basic Auth User"},
+     *      {"name"="AUTH_PW ", "description"="Basic Auth Password"},
+     *  },
+     *  statusCodes={
+     *      201="Created USER sucessfull",
+     *      304="Not Authorized",
+     *      400="Bad Request (the username is in use or fields missing)",
+     *  },
+     * )
      */
     public function newAction(Request $request)
     {
@@ -101,6 +119,17 @@ class UserController extends Controller
     /**
      * @Route("/api/v1/user")
      * @Method("GET")
+     * @ApiDoc(
+     *  description="Retrieve a USER with username and password. Used in login.",
+     *  headers={
+     *      {"name"="AUTH_USER", "description"="Basic Auth User"},
+     *      {"name"="AUTH_PW", "description"="Basic Auth Password"},
+     *  },
+     *  statusCodes={
+     *      200="User login sucessfull. And return JSON with USER object.",
+     *      403="Forbidden"
+     *  },
+     * )
      */
     public function getAction(Request $request)
     {
@@ -115,6 +144,26 @@ class UserController extends Controller
     /**
      * @Route("/api/v1/user/{id}")
      * @Method("PUT")
+     * @ApiDoc(
+     *  description="PUT. Edit a user by the ID passed to the URL.",
+     *  parameters={
+     *      {"name"="ID", "dataType"="integer", "required"=true, "description"="ID in URL!"},
+     *      {"name"="s_name", "dataType"="string", "required"=true, "description"="Name of the USER"},
+     *      {"name"="s_username", "dataType"="string", "required"=true, "description"="UserName used by USER in login"},
+     *      {"name"="s_password", "dataType"="string", "required"=true, "description"="Password of the USER"},
+     *      {"name"="s_roles", "dataType"="simple_array", "required"=false, "description"="Roles [ADMIN,PAGE_1,PAGE_2]"},
+     *  },
+     *  headers={
+     *      {"name"="AUTH_USER", "description"="Basic Auth User"},
+     *      {"name"="AUTH_PW ", "description"="Basic Auth Password"},
+     *  },
+     *  statusCodes={
+     *      200="Updated USER sucessfull",
+     *      403="Forbidden",
+     *      404="User not found",
+     *      400="The Username passed is in use",
+     *  },
+     * )
      */
     public function putAction($id, Request $request)
     {
@@ -174,6 +223,22 @@ class UserController extends Controller
     /**
      * @Route("/api/v1/user/{id}")
      * @Method("DELETE")
+     * @ApiDoc(
+     *  description="DELETE. Remove a userby the ID passed to the URL.!.",
+     *  parameters={
+     *      {"name"="ID", "dataType"="integer", "required"=true, "description"="ID in URL!"},
+     *  },
+     *  headers={
+     *      {"name"="AUTH_USER", "description"="Basic Auth User"},
+     *      {"name"="AUTH_PW", "description"="Basic Auth Password"},
+     *  },
+     *  statusCodes={
+     *      200="Updated USER sucessfull",
+     *      403="Forbidden",
+     *      404="User not found",
+     *      400="The Username passed is in use",
+     *  },
+     * )
      */
     public function deleteAction($id)
     {

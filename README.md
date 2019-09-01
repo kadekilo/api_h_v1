@@ -20,22 +20,19 @@ Welcome to the TEST developed by Karlos García for demonstrate a project develo
 This configuration of apache virtualhost it's pretendend for dont't use .htaccess in order to serve the web directory.
 
     <VirtualHost *:*>
-            DocumentRoot "C:/Program Files (x86)/EasyPHP-Devserver-17/eds-www/sss/symfony/api_h_v1/web"
+            DocumentRoot "path_to/api_h_v1/web"
             ServerName demohola.com
             DirectoryIndex /app.php
-            <Directory "C:/Program Files (x86)/EasyPHP-Devserver-17/eds-www/sss/symfony/api_h_v1/web">
+            <Directory "path_to/api_h_v1/web">
                             AllowOverride All
                             Require all granted
                             Allow from All
-
                     FallbackResource /app.php
             </Directory>
-            <Directory /var/www/project/web/bundles>
+            <Directory path_to/api_h_v1/web/bundles>
                             FallbackResource disabled
             </Directory>
             RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-
-            ErrorLog "C:/Program Files (x86)/EasyPHP-Devserver-17/eds-www/sss/error_log_hola"
     </VirtualHost>
 
 ### DataBase
@@ -46,7 +43,7 @@ First using Doctrine after install with Composer:
     
     > php bin/console doctrine:schema:update --force
     
-Second method, using Doctrine 
+Second method, using Doctrine Migrations:
     
     > php bin/console doctrine:migrations:status
     

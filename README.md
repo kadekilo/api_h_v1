@@ -17,4 +17,25 @@ Cloning and set up.
     # now Composer will ask you for the values of any undefined parameter
      ...
 
-Now...
+Server
+
+This configuration of apache virtualhost it's pretendend for dont't use .htaccess in order to serve the web directory.
+
+    <VirtualHost *:*>
+            DocumentRoot "C:/Program Files (x86)/EasyPHP-Devserver-17/eds-www/sss/symfony/api_h_v1/web"
+            ServerName demohola.com
+            DirectoryIndex /app.php
+            <Directory "C:/Program Files (x86)/EasyPHP-Devserver-17/eds-www/sss/symfony/api_h_v1/web">
+                            AllowOverride All
+                            Require all granted
+                            Allow from All
+
+                    FallbackResource /app.php
+            </Directory>
+            <Directory /var/www/project/web/bundles>
+                            FallbackResource disabled
+            </Directory>
+            RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+            ErrorLog "C:/Program Files (x86)/EasyPHP-Devserver-17/eds-www/sss/error_log_hola"
+    </VirtualHost>

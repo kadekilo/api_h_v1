@@ -29,7 +29,7 @@ This configuration of apache virtualhost it's pretendend for dont't use .htacces
                             Allow from All
                     FallbackResource /app.php
             </Directory>
-            <Directory path_to/api_h_v1/web/bundles>
+            <Directory "path_to/api_h_v1/web/bundles">
                             FallbackResource disabled
             </Directory>
             RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
@@ -39,15 +39,15 @@ This configuration of apache virtualhost it's pretendend for dont't use .htacces
 
 3 method for this. 
 
-First using Doctrine after install with Composer:
+First method, using Doctrine after install with Composer:
     
     > php bin/console doctrine:schema:update --force
     
-Second method, using Doctrine Migrations:
+or Second method, using Doctrine Migrations:
     
     > php bin/console doctrine:migrations:status
     
-Third method, with this SQL:
+or Third method, with this SQL:
 
 	CREATE DATABASE IF NOT EXISTS `hola_mundo` /*!40100 DEFAULT CHARACTER SET utf8 */;
 	USE `hola_mundo`;
@@ -65,6 +65,8 @@ Third method, with this SQL:
 	INSERT INTO `user` (`id`, `name`, `username`, `password`, `roles`) VALUES
 		(1, 'admin', 'admin', '3b3b4904477b0d47a5627249ff5f1212', 'ADMIN');
     
+NOTE: the configuration file with database configuration it's requested by Composer in install procedure.
+
 ## API Documentation
 
 In order to use apiDocumentation, you can:

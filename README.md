@@ -6,7 +6,7 @@ Welcome to the TEST developed by Karlos García for demonstrate a project develo
 START UP
 --------
 
-Cloning and set up.
+##Cloning and set up.
 
     # clone de project
     > cd projects/
@@ -17,7 +17,7 @@ Cloning and set up.
     # now Composer will ask you for the values of any undefined parameter
      ...
 
-Server
+##Server
 
 This configuration of apache virtualhost it's pretendend for dont't use .htaccess in order to serve the web directory.
 

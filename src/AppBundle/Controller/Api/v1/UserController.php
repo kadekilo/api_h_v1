@@ -12,21 +12,28 @@ use Symfony\Component\HttpFoundation\Response;
 class UserController extends Controller
 {
 
-    public function is_loged_in()
+    public function is_loged_in($request)
     {
-        $usuario = $_SERVER['PHP_AUTH_USER'];
-        $passwd  = $_SERVER['PHP_AUTH_PW'];
+        $usuario = $request->headers->get('php-auth-user');
+        $passwd  = $request->headers->get('php-auth-pw');
+        if (empty($usuario) || empty($passwd)) {
+            return false;
+        }
         $passenc = md5("<<399s8f>>".$passwd);
         $bd_user = $this->getDoctrine()
             ->getRepository('AppBundle:User')
             ->findOneBy(['username' => $usuario, 'password' => $passenc]);
-        $T_roles = $bd_user->getRoles();
-        if (isset($T_roles) && is_array($T_roles)) {
-            return [
-                'id' => $bd_user->getId(),
-                'name' => $bd_user->getName(),
-                'username' => $bd_user->getUsername(),
-                'roles' => $T_roles];
+        if (!empty($bd_user)) {
+            $T_roles = $bd_user->getRoles();
+            if (!empty($T_roles) && is_array($T_roles)) {
+                return [
+                    'id' => $bd_user->getId(),
+                    'name' => $bd_user->getName(),
+                    'username' => $bd_user->getUsername(),
+                    'roles' => $T_roles];
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
@@ -38,7 +45,7 @@ class UserController extends Controller
      */
     public function newAction(Request $request)
     {
-        $user_cache = $this->is_loged_in();
+        $user_cache = $this->is_loged_in($request);
         if (in_array('ADMIN', $user_cache['roles']) === false) {
             return new Response('Not Authorized', 304);
         }
@@ -67,7 +74,7 @@ class UserController extends Controller
         $bd_user = $this->getDoctrine()
             ->getRepository('AppBundle:User')
             ->findOneBy(['username' => $s_username]);
-        if ($bd_user != null && $bd_user->Getusername() == $s_username) {
+        if (!empty($bd_user) && $bd_user->Getusername() == $s_username) {
             return new Response("The Username passed is in use", 400);
         }
         // Create a new empty object
@@ -88,38 +95,37 @@ class UserController extends Controller
         // Save our quote
         $em->flush();
         $salida = ["estado" => "OK"];
-        return new Response(json_encode($salida),201);
+        return new Response(json_encode($salida), 201);
     }
 
     /**
      * @Route("/api/v1/user")
      * @Method("GET")
      */
-    public function getAction()
+    public function getAction(Request $request)
     {
-        $user_cache = $this->is_loged_in();
+        $user_cache = $this->is_loged_in($request);
         if ($user_cache == false) {
-            return new Response('Not Authorized', 304);
+            return new Response('Forbidden', 403);
         }
         $salida = ["estado" => "OK", "datos_usuario" => $user_cache];
-        return new Response(json_encode($salida),200);
+        return new Response(json_encode($salida), 200);
     }
 
     /**
      * @Route("/api/v1/user/{id}")
      * @Method("PUT")
      */
-    public function putAction($id,Request $request)
+    public function putAction($id, Request $request)
     {
         $user_cache = $this->is_loged_in();
         if (in_array('ADMIN', $user_cache['roles']) === false) {
-            return new Response('Not Authorized', 304);
+            return new Response('Forbidden', 403);
         }
         $bd_user = $this->getDoctrine()
             ->getRepository('AppBundle:User')
             ->findOneBy(['id' => $id]);
-        if (empty($bd_user))
-        {
+        if (empty($bd_user)) {
             return new Response("User not found", 404);
         }
         // Get the Query Parameters from the URL
@@ -129,35 +135,30 @@ class UserController extends Controller
         $s_password = $request->query->get('s_password');
         $s_rolesA   = $request->query->get('s_roles');
 
-        if (!empty($s_name) && $s_name != $bd_user->getName())
-        {
+        if (!empty($s_name) && $s_name != $bd_user->getName()) {
             $bd_user->setName($s_name);
         }
-        if (!empty($s_username) && $s_username != $s_username->getName())
-        {
+        if (!empty($s_username) && $s_username != $s_username->getName()) {
             $bd_user2 = $this->getDoctrine()
-            ->getRepository('AppBundle:User')
-            ->findOneBy(['username' => $s_username]);
+                ->getRepository('AppBundle:User')
+                ->findOneBy(['username' => $s_username]);
             if ($bd_user2 != null && $bd_user2->Getusername() == $s_username) {
                 return new Response("The Username passed is in use", 400);
             }
             $bd_user->setName($s_name);
         }
-        if (!empty($s_password))
-        {
+        if (!empty($s_password)) {
             // Very Simple encript of pass
             $pass_enc = md5("<<399s8f>>".$s_password);
             $bd_user->setName($pass_enc);
         }
-        if (!empty($s_rolesA))
-        {
+        if (!empty($s_rolesA)) {
             $s_roles = explode(",", $s_rolesA);
-            if (is_array($s_roles))
-            {
+            if (is_array($s_roles)) {
                 $bd_user->setRoles($s_roles);
             }
         }
-        
+
         // Get the Doctrine service and manager
         $em = $this->getDoctrine()->getManager();
 
@@ -167,7 +168,7 @@ class UserController extends Controller
         // Save our quote
         $em->flush();
         $salida = ["estado" => "OK"];
-        return new Response(json_encode($salida),200);
+        return new Response(json_encode($salida), 200);
     }
 
     /**
@@ -178,17 +179,17 @@ class UserController extends Controller
     {
         $user_cache = $this->is_loged_in();
         if (in_array('ADMIN', $user_cache['roles']) === false) {
-            return new Response('Not Authorized', 304);
+            return new Response('Forbidden', 403);
         }
-        $em   = $this->getDoctrine()->getManager();
+        $em      = $this->getDoctrine()->getManager();
         $bd_user = $this->getDoctrine()->getRepository('AppBundle:User')->find($id);
         if (empty($bd_user)) {
-             return new Response("User not found", 404);
+            return new Response("User not found", 404);
         } else {
             $em->remove($bd_user);
             $em->flush();
         }
         $salida = ["estado" => "OK"];
-        return new Response(json_encode($salida),200);
+        return new Response(json_encode($salida), 200);
     }
 }

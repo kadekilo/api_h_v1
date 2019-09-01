@@ -37,3 +37,36 @@ This configuration of apache virtualhost it's pretendend for dont't use .htacces
 
             ErrorLog "C:/Program Files (x86)/EasyPHP-Devserver-17/eds-www/sss/error_log_hola"
     </VirtualHost>
+
+### DataBase
+
+3 method for this. 
+
+First using Doctrine after install with Composer:
+    
+    > php bin/console doctrine:schema:update --force
+    
+Second method, using Doctrine 
+    
+    > php bin/console doctrine:migrations:status
+    
+Third method, with this SQL:
+
+	CREATE DATABASE IF NOT EXISTS `hola_mundo` /*!40100 DEFAULT CHARACTER SET utf8 */;
+	USE `hola_mundo`;
+	DROP TABLE IF EXISTS `user`;
+	CREATE TABLE IF NOT EXISTS `user` (
+	  `id` int(11) NOT NULL AUTO_INCREMENT,
+	  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+	  `username` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+	  `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+	  `roles` longtext COLLATE utf8_unicode_ci NOT NULL COMMENT '(DC2Type:simple_array)',
+	  PRIMARY KEY (`id`),
+	  UNIQUE KEY `UNIQ_8D93D649F85E0677` (`username`)
+	) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+	DELETE FROM `user`;
+	INSERT INTO `user` (`id`, `name`, `username`, `password`, `roles`) VALUES
+		(1, 'admin', 'admin', '3b3b4904477b0d47a5627249ff5f1212', 'ADMIN');
+    
+## More information
+

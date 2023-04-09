@@ -76,7 +76,7 @@ In order to use apiDocumentation, you can:
 
 ## More information
 
-Please, visit http://kadekilo.com/temporal_637992ddf6/ for a complete documentation of the Project. This web its protected by username and password that have been sent to your email adress, remited by Gabriel Simón.
+Please, visit http://kadekilo.com/temporal_637992ddf6/ for a complete documentation of the Project. This web its protected by username "demo" and password "holamundo".
 
 
 
